@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         formData.append('file', file);
 
         try {
-            const uploadResponse = await fetch('https://kightning.github.io/Ryouri-website/upload', {
+            const uploadResponse = await fetch('https://ryouri-app.herokuapp.com/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const uploadResult = await uploadResponse.json();
             const photoUrl = uploadResult.photoUrl;
-            const response = await fetch('https://kightning.github.io/Ryouri-website/recipes', {
+            const response = await fetch('https://ryouri-app.herokuapp.com/recipes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, date, photo: photoUrl, note })
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     try {
-        const response = await fetch('https://kightning.github.io/Ryouri-website/recipes');
+        const response = await fetch('https://ryouri-app.herokuapp.com/recipes');
         if (!response.ok) {
             throw new Error('ネットワークの応答が正しくありません');
         }
@@ -53,37 +53,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     updateHashtagDropdown();
 });
-
-document.getElementById('filterBtn').addEventListener('click', () => {
-    const filterName = document.getElementById('filterName').value.toLowerCase();
-    const filterStartDate = document.getElementById('filterStartDate').value;
-    const filterEndDate = document.getElementById('filterEndDate').value;
-    const filterHashtag = document.getElementById('hashtagDropdown').value;
-    const recipesDiv = document.getElementById('recipes');
-    const recipeItems = recipesDiv.querySelectorAll('.recipe-item');
-    recipeItems.forEach(item => {
-        const recipeName = item.querySelector('.recipe-name').textContent.toLowerCase();
-        const recipeDate = item.querySelector('.recipe-date').textContent;
-        const recipeTags = item.getAttribute('data-tags').split(' ');
-
-        let isVisible = true;
-
-        if (filterName && !recipeName.includes(filterName)) {
-            isVisible = false;
-        }
-        if (filterStartDate && filterEndDate && (new Date(recipeDate) < new Date(filterStartDate) || new Date(recipeDate) > new Date(filterEndDate))) {
-            isVisible = false;
-        }
-        if (filterHashtag && !recipeTags.includes(filterHashtag)) {
-            isVisible = false;
-        }
-
-        item.style.display = isVisible ? 'block' : 'none';
-    });
-});
 async function loadHashtags(recipeId) {
     try {
-        const response = await fetch(`https://kightning.github.io/Ryouri-website/loadHashtags/${recipeId}`);
+        const response = await fetch(`https://ryouri-app.herokuapp.com/loadHashtags/${recipeId}`);
         if (!response.ok) {
             throw new Error('ネットワークの応答が正しくありません');
         }
@@ -96,7 +68,7 @@ async function loadHashtags(recipeId) {
 }
 
 function saveHashtag(recipeId, hashtag) {
-    fetch('https://kightning.github.io/Ryouri-website/hashtags', {
+    fetch('https://ryouri-app.herokuapp.com/hashtags', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -125,7 +97,7 @@ function addRecipeToDOM(id, name, date, photo, note, hashtags = []) {
     recipeItem.querySelector('.delete-btn').addEventListener('click', async () => {
         try {
             console.log(`Attempting to delete recipe with id: ${id}`);
-            const response = await fetch(`https://kightning.github.io/Ryouri-website/recipes/${id}`, {
+            const response = await fetch(`https://ryouri-app.herokuapp.com/recipes/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) {
@@ -178,7 +150,7 @@ async function updateHashtagDropdown() {
     dropdown.innerHTML = '<option value="">Select a hashtag</option>'; // 初期化
 
     let allTags = [];
-    const recipes = await fetch('https://kightning.github.io/Ryouri-website/recipes').then(res => res.json());
+    const recipes = await fetch('https://ryouri-app.herokuapp.com/recipes').then(res => res.json());
 
     for (const recipe of recipes) {
         const tags = await loadHashtags(recipe.id);
@@ -187,7 +159,7 @@ async function updateHashtagDropdown() {
 
     // 重複を排除
     allTags = [...new Set(allTags)];
-    
+
     allTags.forEach(tag => {
         const option = document.createElement('option');
         option.value = tag;
