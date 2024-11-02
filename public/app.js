@@ -145,6 +145,7 @@ function addRecipeToDOM(id, name, date, photo, note, hashtags = []) {
         });
     });
 }
+
 async function updateHashtagDropdown() {
     const dropdown = document.getElementById('hashtagDropdown');
     dropdown.innerHTML = '<option value="">Select a hashtag</option>'; // 初期化
