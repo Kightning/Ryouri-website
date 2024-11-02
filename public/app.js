@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     updateHashtagDropdown();
 });
+
 async function loadHashtags(recipeId) {
     try {
         const response = await fetch(`https://ryouri-app.herokuapp.com/loadHashtags/${recipeId}`);
@@ -66,7 +67,6 @@ async function loadHashtags(recipeId) {
         return [];
     }
 }
-
 function saveHashtag(recipeId, hashtag) {
     fetch('https://ryouri-app.herokuapp.com/hashtags', {
         method: 'POST',
