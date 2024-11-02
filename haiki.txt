@@ -1,0 +1,36 @@
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const app = express();
+
+app.use(express.json());
+app.use(express.static('public'));
+
+const db = new sqlite3.Database(':memory:');
+
+db.serialize(() => {
+  db.run("CREATE TABLE recipes (id INTEGER PRIMARY KEY, name TEXT, photo TEXT)");
+});
+
+app.post('/recipes', (req, res) => {
+  const { name, photo } = req.body;
+  db.run("INSERT INTO recipes (name, photo) VALUES (?, ?)", [name, photo], function(err) {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.send({ id: this.lastID });
+  });
+});
+
+app.get('/recipes', (req, res) => {
+  db.all("SELECT * FROM recipes", [], (err, rows) => {
+    if (err) {
+      return res.status(500).send(err.message);
+    }
+    res.send(rows);
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>料理の記録</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form id="box">
+    <h1>入力フォーム</h1>
+    <div class="setumon">
+      <b>料理名</b>
+    </div>
+    <div>
+      <input type="text" name="ryourimei" id="ryourimei">
+    </div>
+    <div class="setumon">
+      <b>日付</b>
+    </div>
+    <div>
+      <input type="date" name="hiduke" id="hiduke">
+    </div>
+    <div class="setumon">
+      <b>画像</b>
+    </div>
+    <div>
+      <input type="file" name="file" id="file">
+    </div>
+    <div class="setumon">
+      <b>備考</b>
+    </div>
+    <div>
+      <textarea name="bikou" id="bikou" rows="3" cols="40"></textarea>
+    </div>
+    <div>
+      <input type="submit" id="submitBtn">
+    </div>
+  </form>
+  <div id="itiran">
+    <h1>料理一覧</h1>
+    <div id="data">
+      <div id="filterNameBox">
+      <input type="text" id="filterName" placeholder="料理名">
+      </div>
+      <select id="hashtagDropdown">
+        <option value="">ハッシュタグを選択</option>
+      </select>
+        <div class="filterdate">
+          <span>開始日</span>
+          <input type="date" id="filterStartDate" placeholder="開始日">
+        </div>
+        <div class="filterdate">
+          <span>終了日</span>
+          <input type="date" id="filterEndDate" placeholder="終了日">
+    </div>
+  </div>
+      <button type="button" id="filterBtn">フィルタ</button>
+      <button type="button" id="resetBtn">リセット</button>
+    <ul id="list"></ul>
+    <div id="recipes"></div>
+</div>
+  <script src="app.js"></script>
+</body>
+</html>

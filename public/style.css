@@ -1,0 +1,324 @@
+/* ベーススタイル */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin: 10px 0;
+}
+
+h2 {
+  margin: 2px 0;
+}
+
+form {
+  background: #fff;
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.setumon {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+input[type="text"], input[type="date"], input[type="file"], textarea {
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input[type="submit"] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+#itiran {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#itiran input[type="text"], #itiran input[type="date"] {
+  width: 45%;
+  margin: 5px 2%;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#itiran button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+#itiran button:hover {
+  background-color: #45a049;
+}
+
+.recipe-item {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-id {
+  display: none;
+  font-weight: bold;
+}
+
+.recipe-name {
+  color: #000000;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0 0 0 8%;
+}
+
+.recipe-date {
+  color: #555;
+  display: none;
+}
+
+.recipe-photo {
+  text-align: center;
+}
+
+.recipe-photo img {
+  width: 50px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.recipe-note {
+  font-style: italic;
+  color: #777;
+  display: none;
+}
+
+.delete-btn {
+  display: none;
+}
+
+#filterBtn {
+  width: 20%;
+  padding: 2px 2px;
+  margin: 0px 0px;
+}
+@media screen and (max-width: 1024px) {
+  #recipes {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: left;
+  }
+  form, #itiran {
+    width: 90%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+  #data {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
+  #filterdate {
+    padding: 2px 2px;
+    margin: 0 10%;
+  }
+  #filterNameBox {
+    display: inline-block;
+    height: auto;
+    width: 40%;
+    padding: 2px 2px;
+    margin: 0 0;
+  }
+  #hashtagDropdown {
+    width: 40%;
+    padding: 2px 2px;
+    margin: 0 0;
+  }
+  #itiran input[type="text"] {
+    width: 90%;
+    margin: 0px 0;
+    height: auto;
+    font-size: 16px;
+    padding: 2px 2px;
+  }
+  #itiran input[type="date"] {
+    width: 90%;
+    margin: 8px 8px 0 0;
+    height: auto;
+    font-size: 16px;
+    padding: 2px 2px;
+  }
+  span {
+    font-size: 0.6rem;
+  }
+  #itiran button {
+    width: 30%;
+    background-color: #555;
+    border: none;
+    font-size: 0.8rem;
+    padding: 2px 2px;
+    margin: 10px 8px 0 0;
+    font-weight: bold;
+  }
+  #itiran button:hover {
+    background-color: #444;
+  }
+  .recipe-photo img {
+    width: 80%;
+  }
+  .recipe-item {
+    padding: 1% 1%;
+    margin: 1% 1%;
+    width: 45%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .recipe-item {
+    width: calc(33.33% - 36px); /* 1行に3つの料理が並ぶように調整 */
+    margin: 10px;
+  }
+}
+
+/* 全画面表示のスタイル */
+.full-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.full-screen-content {
+  background: #fff;
+  color: #000;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 80%;
+  max-width: 800px;
+}
+
+.full-screen-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.full-screen-info {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.full-screen-info h2, .full-screen-info p {
+  color: #333;
+  margin: 8px 0;
+}
+
+.full-screen-info #hashtagList {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: large;
+}
+
+#hashtagInput {
+  width: 80%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+#addHashtagBtn {
+  padding: 10px 20px;
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+#addHashtagBtn:hover {
+  background-color: #e14a4f;
+}
+
+#backBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#backBtn:hover {
+  background-color: #e14a4f;
+}
+
+#saveNoteBtn {
+  padding: 10px 20px;
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+#saveNoteBtn:hover {
+  background-color: #e14a4f;
+}
