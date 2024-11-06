@@ -1,106 +1,72 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const cors = require('cors');
 const multer = require('multer');
+const cors = require('cors');
 const app = express();
+const port = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
-const db = new sqlite3.Database('./recipes.db');
-
+// ローカルストレージ設定
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
-
-db.serialize(() => {
-  db.run("CREATE TABLE IF NOT EXISTS recipes (id INTEGER PRIMARY KEY, name TEXT, date TEXT, photo TEXT, note TEXT)");
-  db.run("CREATE TABLE IF NOT EXISTS hashtags (id INTEGER PRIMARY KEY, recipe_id INTEGER, hashtag TEXT)");
-});
-
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'ファイルを選択してください' });
-  }
-  res.send({ photoUrl: `/uploads/${req.file.originalname}` });
-});
-
-
-app.post('/recipes', (req, res) => {
-  const { name, date, photo, note } = req.body;
-  db.run("INSERT INTO recipes (name, date, photo, note) VALUES (?, ?, ?, ?)", [name, date, photo, note], function(err) {
-    if (err) {
-      return res.status(500).send(err.message);
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
-    res.send({ id: this.lastID });
-  });
 });
 
+const upload = multer({ storage });
+
+const recipes = [];
+const hashtags = [];
+
+// 画像アップロードエンドポイント
+app.post('/upload', upload.single('file'), (req, res) => {
+    const photoUrl = `/uploads/${req.file.filename}`;
+    res.status(200).json({ photoUrl });
+});
+
+// レシピ作成エンドポイント
+app.post('/recipes', (req, res) => {
+    const { name, date, photo, note } = req.body;
+    const newRecipe = { id: recipes.length + 1, name, date, photo, note };
+    recipes.push(newRecipe);
+    res.status(201).json(newRecipe);
+});
+
+// レシピ取得エンドポイント
+app.get('/recipes', (req, res) => {
+    res.status(200).json(recipes);
+});
+// レシピ削除エンドポイント
+app.delete('/recipes/:id', (req, res) => {
+  const recipeId = parseInt(req.params.id, 10);
+  const recipeIndex = recipes.findIndex(recipe => recipe.id === recipeId);
+  if (recipeIndex !== -1) {
+      recipes.splice(recipeIndex, 1);
+      res.status(204).send();
+  } else {
+      res.status(404).json({ error: 'レシピが見つかりません' });
+  }
+});
+
+// ハッシュタグ保存エンドポイント
 app.post('/hashtags', (req, res) => {
   const { recipeId, hashtag } = req.body;
-  db.run("INSERT INTO hashtags (recipe_id, hashtag) VALUES (?, ?)", [recipeId, hashtag], function(err) {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    res.send({ id: this.lastID });
-  });
+  const newHashtag = { recipeId: parseInt(recipeId, 10), hashtag };
+  hashtags.push(newHashtag);
+  res.status(201).json(newHashtag);
 });
 
-app.get('/loadHashtags/:id', (req, res) => {
-  const recipeId = req.params.id;
-  db.all("SELECT hashtag FROM hashtags WHERE recipe_id = ?", [recipeId], (err, rows) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    const hashtags = rows.map(row => row.hashtag);
-    res.json({ hashtags });
-  });
+// ハッシュタグ取得エンドポイント
+app.get('/loadHashtags/:recipeId', (req, res) => {
+  const recipeId = parseInt(req.params.recipeId, 10);
+  const recipeHashtags = hashtags.filter(tag => tag.recipeId === recipeId).map(tag => tag.hashtag);
+  res.status(200).json({ hashtags: recipeHashtags });
 });
-
-app.delete('/recipes/:id', (req, res) => {
-  const id = req.params.id;
-  db.run("DELETE FROM recipes WHERE id = ?", [id], function(err) {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    db.run("DELETE FROM hashtags WHERE recipe_id = ?", [id], function(err) {
-      if (err) {
-        return res.status(500).send(err.message);
-      }
-      res.send({ message: 'レシピとハッシュタグが削除されました' });
-    });
-  });
-});
-app.get('/recipes', (req, res) => {
-  const { name, date } = req.query;
-  let query = "SELECT * FROM recipes WHERE 1=1";
-  let params = [];
-  if (name) {
-    query += " AND name LIKE ?";
-    params.push(`%${name}%`);
-  }
-  if (date) {
-    query += " AND date = ?";
-    params.push(date);
-  }
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    res.send(rows);
-  });
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// サーバーの起動
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
