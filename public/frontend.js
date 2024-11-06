@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         formData.append('file', file);
 
         try {
-            const uploadResponse = await fetch('https://ryouri-app.herokuapp.com/upload', {
+            const uploadResponse = await fetch('http://localhost:3000/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const uploadResult = await uploadResponse.json();
             const photoUrl = uploadResult.photoUrl;
-            const response = await fetch('https://ryouri-app.herokuapp.com/recipes', {
+            const response = await fetch('http://localhost:3000/recipes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, date, photo: photoUrl, note })
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     try {
-        const response = await fetch('https://ryouri-app.herokuapp.com/recipes');
+        const response = await fetch('http://localhost:3000/recipes');
         if (!response.ok) {
             throw new Error('ネットワークの応答が正しくありません');
         }
@@ -53,10 +53,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     updateHashtagDropdown();
 });
-
 async function loadHashtags(recipeId) {
     try {
-        const response = await fetch(`https://ryouri-app.herokuapp.com/loadHashtags/${recipeId}`);
+        const response = await fetch(`http://localhost:3000/loadHashtags/${recipeId}`);
         if (!response.ok) {
             throw new Error('ネットワークの応答が正しくありません');
         }
@@ -67,8 +66,9 @@ async function loadHashtags(recipeId) {
         return [];
     }
 }
+
 function saveHashtag(recipeId, hashtag) {
-    fetch('https://ryouri-app.herokuapp.com/hashtags', {
+    fetch('http://localhost:3000/hashtags', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ function addRecipeToDOM(id, name, date, photo, note, hashtags = []) {
     recipeItem.querySelector('.delete-btn').addEventListener('click', async () => {
         try {
             console.log(`Attempting to delete recipe with id: ${id}`);
-            const response = await fetch(`https://ryouri-app.herokuapp.com/recipes/${id}`, {
+            const response = await fetch(`http://localhost:3000/recipes/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) {
@@ -150,7 +150,7 @@ async function updateHashtagDropdown() {
     dropdown.innerHTML = '<option value="">Select a hashtag</option>'; // 初期化
 
     let allTags = [];
-    const recipes = await fetch('https://ryouri-app.herokuapp.com/recipes').then(res => res.json());
+    const recipes = await fetch('http://localhost:3000/recipes').then(res => res.json());
 
     for (const recipe of recipes) {
         const tags = await loadHashtags(recipe.id);
